@@ -18,6 +18,16 @@ h1 {
 p {
     color: #000000;
 }
+
+footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #666;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+}
+
 #grid {
     display: grid;
     grid-template-columns: repeat(5, 60px);
@@ -140,4 +150,5 @@ button:disabled {
 #validWordsList li:last-child {
     border-bottom: none;
 }
+
 
