@@ -206,16 +206,51 @@ analyzeBtn.addEventListener('click', () => {
     };
 });
 
-
 function filterValidWords(wordList, guesses) {
     return wordList.filter(word => {
         return guesses.every(row => {
-            return row.every((cell, i) => {
-                if (cell.state === 0) return word[i] !== cell.letter && !word.includes(cell.letter);
-                if (cell.state === 1) return word.includes(cell.letter) && word[i] !== cell.letter;
-                if (cell.state === 2) return word[i] === cell.letter;
-                return true;
+            const guess = row.map(c => c.letter);
+            const states = row.map(c => c.state); // 0=grey, 1=yellow, 2=green
+
+            // Count greens + yellows for letter occurrence rules
+            const requiredCounts = {};
+            guess.forEach((letter, idx) => {
+                if (states[idx] === 1 || states[idx] === 2) {
+                    requiredCounts[letter] = (requiredCounts[letter] || 0) + 1;
+                }
             });
+
+            // Position checks (green/yellow/grey position rules)
+            for (let i = 0; i < guess.length; i++) {
+                const letter = guess[i];
+                if (states[i] === 2) { // Green
+                    if (word[i] !== letter) return false;
+                }
+                if (states[i] === 1) { // Yellow
+                    if (word[i] === letter) return false; // Wrong position
+                    if (!word.includes(letter)) return false; // Must exist elsewhere
+                }
+                if (states[i] === 0) { // Grey
+                    // If letter is NOT in requiredCounts at all, forbid globally
+                    if (!requiredCounts[letter] && word.includes(letter)) return false;
+
+                    // If letter IS in requiredCounts, it means we've already accounted for
+                    // all valid copies — so forbid extra copies
+                    const occurrences = [...word].filter(ch => ch === letter).length;
+                    if (occurrences > (requiredCounts[letter] || 0)) return false;
+
+                    // Always forbid it in this specific position
+                    if (word[i] === letter) return false;
+                }
+            }
+
+            // Occurrence checks — word must have at least requiredCounts for each letter
+            for (const [letter, count] of Object.entries(requiredCounts)) {
+                const occurrences = [...word].filter(ch => ch === letter).length;
+                if (occurrences < count) return false;
+            }
+
+            return true;
         });
     });
 }
@@ -229,3 +264,4 @@ window.onload = () => {
 };
 
 createGrid();
+
