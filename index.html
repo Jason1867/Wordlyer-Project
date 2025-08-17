@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title> Wordlyzer - Wordle Analyzer</title>
 <meta name="description" content=" Wordlyzer is a powerful, browser-based Wordle helper designed to improve your guessing strategy. Enter your guesses and mark each letter’s feedback to instantly filter possible solutions from the full Wordle dictionary — no backend needed. Perfect for Wordle enthusiasts looking to sharpen their skills with real-time analysis and detailed candidate lists.">
 <link rel="stylesheet" href="static/css/style.css" />
@@ -12,10 +12,10 @@
     <div id="grid" tabindex="0"></div>
     
     <button id="analyzeBtn">Analyze</button>
-    <div id="resultCard" class="result-card" style="display:none;">
+    <button id="resultCard" class="result-card" style="display:none;">
         <p id="result"></p>
-    </div>
-    <button id="showWordsBtn" style="display:none;">Show Valid Words</button>
+    </button>
+    <!-- <button id="showWordsBtn" style="display:none;">Show Valid Words</button> -->
 
     <div id="wordsModal" class="modal" style="display:none;" tabindex="0" aria-modal="true" role="dialog" aria-labelledby="modalTitle" aria-describedby="validWordsList">
         <div class="modal-content">
@@ -44,7 +44,7 @@
             </ul>
             <p>
             Click <b>Analyze</b> to find all possible words.  
-            You’ll see the <span class="highlight">probability of guessing correctly</span> and clicking <b>Show Valid Words </b>shows the list of candidate words.
+            You’ll see the <span class="highlight">probability of guessing correctly</span> and clicking <b>the results </b>shows the list of candidate words.
             </p>
             <p>
             Use this tool to narrow down your guesses and maximize your chances.
