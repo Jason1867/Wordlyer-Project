@@ -158,6 +158,10 @@ function placeCursorAtEnd(element) {
     sel.addRange(range);
 }
 
+document.getElementById("toggleHelp").addEventListener("click", () => {
+  const helpContent = document.getElementById("helpContent");
+  helpContent.style.display = helpContent.style.display === "block" ? "none" : "block";
+});
 
 // Analyze without backend
 analyzeBtn.addEventListener('click', () => {
@@ -181,18 +185,24 @@ analyzeBtn.addEventListener('click', () => {
 
     if (validWords.error) {
         result.textContent = validWords.error;
+        document.getElementById("resultCard").style.display = "block";
         showWordsBtn.style.display = 'none';
         return;
     }
 
     if (!validWords.length) {
         result.textContent = "No valid words found.";
+        document.getElementById("resultCard").style.display = "block";
         showWordsBtn.style.display = 'none';
         return;
     }
 
     const probability = 1 / validWords.length;
-    result.textContent = `Correct Guess Probability: ${(probability * 100).toFixed(2)}% (${validWords.length} possible words)`;
+    result.innerHTML = `
+        <span class="probability">${(probability * 100).toFixed(2)}%</span>   
+        <small>${validWords.length} possible words</small>
+    `;
+    document.getElementById("resultCard").style.display = "block";
 
     showWordsBtn.style.display = 'inline-block';
     showWordsBtn.onclick = () => {
@@ -264,4 +274,3 @@ window.onload = () => {
 };
 
 createGrid();
-
