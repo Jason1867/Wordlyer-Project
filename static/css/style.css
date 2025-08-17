@@ -36,10 +36,13 @@ footer {
     justify-content: center;
     margin: 20px auto;
     outline: none; /* prevent focus outline on grid container */
-    user-select: none;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none;     /* old IE */
-    -webkit-touch-callout: none; /* iOS long-press menu */
+}
+
+#grid div {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* old IE */
+  -webkit-touch-callout: none; /* iOS long-press menu */
 }
 
 .cell {
@@ -246,3 +249,4 @@ button:disabled {
     color: #f1c40f;
     font-weight: 600;
 }
+
