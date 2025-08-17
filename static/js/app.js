@@ -1,7 +1,8 @@
 const grid = document.getElementById('grid');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const result = document.getElementById('result');
-const showWordsBtn = document.getElementById('showWordsBtn');
+// const showWordsBtn = document.getElementById('showWordsBtn');
+const resultCard = document.getElementById('resultCard'); 
 const wordsModal = document.getElementById('wordsModal');
 const closeModal = document.getElementById('closeModal');
 const validWordsList = document.getElementById('validWordsList');
@@ -12,6 +13,7 @@ const STATE_COLORS = ['#787c7e', '#c9b458', '#6aaa64'];
 
 let cells = [];
 let cellStates = []; // 2D array holding state (0/1/2)
+let latestValidWords = []; // store words for card click
 
 // Create grid
 function createGrid() {
@@ -173,27 +175,23 @@ analyzeBtn.addEventListener('click', () => {
         for (let c = 0; c < COLS; c++) {
             const letter = cells[r][c].textContent.toLowerCase();
             const state = cellStates[r][c];
-            console.log(`Cell[${r}][${c}] = letter: '${letter}', state: ${state}`);
             row.push({ letter, state });
         }
         guesses.push(row);
     }
-    console.log('Guesses:', guesses);
 
     const validWords = filterValidWords(WORDS, guesses);
-    console.log('Valid words:', validWords);
+    latestValidWords = validWords; // save for result card click
 
     if (validWords.error) {
         result.textContent = validWords.error;
-        document.getElementById("resultCard").style.display = "block";
-        showWordsBtn.style.display = 'none';
+        resultCard.style.display = "block";
         return;
     }
 
     if (!validWords.length) {
         result.textContent = "No valid words found.";
-        document.getElementById("resultCard").style.display = "block";
-        showWordsBtn.style.display = 'none';
+        resultCard.style.display = "block";
         return;
     }
 
@@ -202,27 +200,27 @@ analyzeBtn.addEventListener('click', () => {
         <span class="probability">${(probability * 100).toFixed(2)}%</span>   
         <small>${validWords.length} possible words</small>
     `;
-    document.getElementById("resultCard").style.display = "block";
+    resultCard.style.display = "block";
+});
 
-    showWordsBtn.style.display = 'inline-block';
-    showWordsBtn.onclick = () => {
-        validWordsList.innerHTML = '';
-        validWords.forEach(w => {
-            const li = document.createElement('li');
-            li.textContent = w;
-            validWordsList.appendChild(li);
-        });
-        wordsModal.style.display = 'flex';
-    };
+// Make result card clickable
+resultCard.addEventListener('click', () => {
+    if (!latestValidWords.length) return;
+    validWordsList.innerHTML = '';
+    latestValidWords.forEach(w => {
+        const li = document.createElement('li');
+        li.textContent = w;
+        validWordsList.appendChild(li);
+    });
+    wordsModal.style.display = 'flex';
 });
 
 function filterValidWords(wordList, guesses) {
     return wordList.filter(word => {
         return guesses.every(row => {
             const guess = row.map(c => c.letter);
-            const states = row.map(c => c.state); // 0=grey, 1=yellow, 2=green
+            const states = row.map(c => c.state);
 
-            // Count greens + yellows for letter occurrence rules
             const requiredCounts = {};
             guess.forEach((letter, idx) => {
                 if (states[idx] === 1 || states[idx] === 2) {
@@ -230,31 +228,23 @@ function filterValidWords(wordList, guesses) {
                 }
             });
 
-            // Position checks (green/yellow/grey position rules)
             for (let i = 0; i < guess.length; i++) {
                 const letter = guess[i];
-                if (states[i] === 2) { // Green
+                if (states[i] === 2) { 
                     if (word[i] !== letter) return false;
                 }
-                if (states[i] === 1) { // Yellow
-                    if (word[i] === letter) return false; // Wrong position
-                    if (!word.includes(letter)) return false; // Must exist elsewhere
+                if (states[i] === 1) { 
+                    if (word[i] === letter) return false;
+                    if (!word.includes(letter)) return false;
                 }
-                if (states[i] === 0) { // Grey
-                    // If letter is NOT in requiredCounts at all, forbid globally
+                if (states[i] === 0) { 
                     if (!requiredCounts[letter] && word.includes(letter)) return false;
-
-                    // If letter IS in requiredCounts, it means we've already accounted for
-                    // all valid copies — so forbid extra copies
                     const occurrences = [...word].filter(ch => ch === letter).length;
                     if (occurrences > (requiredCounts[letter] || 0)) return false;
-
-                    // Always forbid it in this specific position
                     if (word[i] === letter) return false;
                 }
             }
 
-            // Occurrence checks — word must have at least requiredCounts for each letter
             for (const [letter, count] of Object.entries(requiredCounts)) {
                 const occurrences = [...word].filter(ch => ch === letter).length;
                 if (occurrences < count) return false;
