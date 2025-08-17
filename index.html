@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title> Wordlyzer - Wordle Analyzer and Solver</title>
+<title> Wordlyzer - Wordle Analyzer</title>
 <meta name="description" content=" Wordlyzer is a powerful, browser-based Wordle helper designed to improve your guessing strategy. Enter your guesses and mark each letter’s feedback to instantly filter possible solutions from the full Wordle dictionary — no backend needed. Perfect for Wordle enthusiasts looking to sharpen their skills with real-time analysis and detailed candidate lists.">
 <link rel="stylesheet" href="static/css/style.css" />
 </head>
 <body>
-    <h1>Wordlyzer</h1>
+    <h1>WORDLYZER</h1>
     <div id="grid" tabindex="0"></div>
-
+    
     <button id="analyzeBtn">Analyze</button>
-    <p id="result"></p>
+    <div id="resultCard" class="result-card" style="display:none;">
+        <p id="result"></p>
+    </div>
     <button id="showWordsBtn" style="display:none;">Show Valid Words</button>
 
     <div id="wordsModal" class="modal" style="display:none;" tabindex="0" aria-modal="true" role="dialog" aria-labelledby="modalTitle" aria-describedby="validWordsList">
@@ -23,12 +25,37 @@
         </div>
     </div>
 
-<script src="words.js"></script>
+    <div class="help-section">
+        <button id="toggleHelp" class="help-btn">How to Use</button>
+        <div id="helpContent" class="help-content">
+            <h3>How to Use</h3>
+            <p>
+            Enter the letters you got from your Wordle game:
+            </p>
+            <p>
+            You can click anywhere on the grid to start typing in your letters.  </p><p>
+            On the computer, <span class="highlight">right click any letter </span> to change the state of the letter to match your Wordle game.</p><p>
+            On mobile, <span class="highlight">double click any letter </span> to change the state of the letter to match your Wordle game.</p>
+            </p><p>States:</p>
+            <ul>
+            <li><b style="color: #6aaa64;">Green Letters</b> – Letters you <u>know are correct</u> at that position.</li>
+            <li><b style="color: #c9b458;">Yellow Letters</b> – Letters you <u>know are wrong</u> at that position but are found in the word.</li>
+            <li><b style="color: #787c7e;">Grey Letters</b> – Letters you know are <u>not in the word at all</u>.</li>
+            </ul>
+            <p>
+            Click <b>Analyze</b> to find all possible words.  
+            You’ll see the <span class="highlight">probability of guessing correctly</span> and clicking <b>Show Valid Words </b>shows the list of candidate words.
+            </p>
+            <p>
+            Use this tool to narrow down your guesses and maximize your chances.
+            </p>
+        </div>
+    </div>
+
+<script src="officalWords.js"></script>
 <script src="static/js/app.js"></script>
 <footer>
   © 2025 Wordlyzer • Made By Jason Xu
 </footer>
 </body>
 </html>
-
-
