@@ -36,6 +36,10 @@ footer {
     justify-content: center;
     margin: 20px auto;
     outline: none; /* prevent focus outline on grid container */
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* old IE */
+    -webkit-touch-callout: none; /* iOS long-press menu */
 }
 
 .cell {
@@ -163,8 +167,15 @@ button:disabled {
     text-align: center;
     font-size: 16px;
     font-weight: 500;
+    cursor: pointer;   
     /* border: 1px solid #444; */
     animation: fadeIn 0.3s ease;
+    font: inherit; /* remove button default font */
+}
+
+.result-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .result-card .probability {
